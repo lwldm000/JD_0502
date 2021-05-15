@@ -34,11 +34,11 @@ let notifyBool = true; // 代码内部使用，控制是否通知
 let cookieArr = []; // 用户 cookie 数组
 let currentCookie = ''; // 当前用户 cookie
 let tokenNull = {'farm_jstoken': '', 'phoneid': '', 'timestamp': ''}; // 内置一份空的 token
-let tokenArr = []; // 用户 token 数组
+let tokenArr = [{"farm_jstoken":"1b62b12562415c4a416a523aeab2b238","timestamp":"1610344798059","phoneid":"a34b5ae8055220e1-35478695761247"}]; // 用户 token 数组
 let currentToken = {}; // 当前用户 token
 let shareCode = ''; // 内置助力码
 let jxncShareCodeArr = []; // 用户 助力码 数组
-let currentShareCode = []; // 当前用户 要助力的助力码
+let currentShareCode = []; // 当前用户 要助力的助力码80a30ff4d138ace1813fb77953d45e60
 const openUrl = `openjd://virtual?params=${encodeURIComponent('{ "category": "jump", "des": "m", "url": "https://wqsh.jd.com/sns/201912/12/jxnc/detail.html?ptag=7155.9.32&smp=b47f4790d7b2a024e75279f55f6249b9&active=jdnc_1_chelizi1205_2"}',)}`; // 打开京喜农场
 let subTitle = '', message = '', option = {'open-url': openUrl}; // 消息副标题，消息正文，消息扩展参数
 const JXNC_API_HOST = 'https://wq.jd.com/';

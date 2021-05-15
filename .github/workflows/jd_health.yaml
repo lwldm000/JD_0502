@@ -1,16 +1,16 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: jd_ms-京东秒秒币
+name: jd_health-JD健康
 
 on:
     workflow_dispatch:
     schedule:
-        - cron: "10 0,1,23,14 * * *"
+        - cron: "0 6,15,20 * * *"
     watch:
         types: [started]
     repository_dispatch:
-        types: jd_ms.js
+        types: jd_health
 
 jobs:
     build:
@@ -18,16 +18,16 @@ jobs:
         if: github.event.repository.owner.id == github.event.sender.id
         steps:
             - uses: actions/checkout@v1
-            - name: Use Node.js 10.x
+            - name: Use Node.js 15.x
               uses: actions/setup-node@v1
               with:
-                  node-version: 10.x
+                  node-version: 15.x
             - name: npm install
               run: |
                   npm install
-            - name: "运行 【京东秒秒币】"
+            - name: "运行 【JD健康】"
               run: |
-                  node jd_ms.js
+                  node jd_health.js
               env:
                   JD_COOKIE: ${{ github.event.client_payload.JD_COOKIE || secrets.JD_COOKIE }}
                   JD_DEBUG: ${{ github.event.client_payload.JD_DEBUG || secrets.JD_DEBUG }}
@@ -46,4 +46,5 @@ jobs:
                   QYWX_AM: ${{ github.event.client_payload.QYWX_AM || secrets.QYWX_AM }}
                   PUSH_PLUS_TOKEN: ${{ github.event.client_payload.PUSH_PLUS_TOKEN || secrets.PUSH_PLUS_TOKEN }}
                   PUSH_PLUS_USER: ${{ github.event.client_payload.PUSH_PLUS_USER || secrets.PUSH_PLUS_USER }}
-                  SYNCURL: https://github.com/wuzhi03/MyActions/raw/main/jd_ms.js
+                  JDHEALTH_SHARECODES: ${{ github.event.client_payload.JDHEALTH_SHARECODES || secrets.JDHEALTH_SHARECODES }}
+                  SYNCURL: https://github.com/wuzhi03/MyActions/raw/main/jd_health.js

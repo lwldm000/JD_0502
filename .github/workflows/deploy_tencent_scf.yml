@@ -21,7 +21,6 @@ jobs:
       DD_BOT_TOKEN: ${{ secrets.DD_BOT_TOKEN}}
       DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET}}
       QYWX_KEY: ${{ secrets.QYWX_KEY}}
-      QYWX_AM: ${{ secrets.QYWX_AM }}
       IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY}}
       PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN}}
       PUSH_PLUS_USER: ${{ secrets.PUSH_PLUS_USER}}
@@ -68,7 +67,7 @@ jobs:
       JXNCTOKENS: ${{ secrets.JXNCTOKENS}}
       DREAMFACTORY_FORBID_ACCOUNT: ${{ secrets.DREAMFACTORY_FORBID_ACCOUNT}}
       JDFACTORY_FORBID_ACCOUNT: ${{ secrets.JDFACTORY_FORBID_ACCOUNT}}
-      
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -87,7 +86,6 @@ jobs:
           npm install got
           npm install tough-cookie
           npm install js-yaml
-
       - name: "将Secrets里面配置的变量添加到severless.yml里面作为环境变量"
         run: |
           if [ $JD_COOKIE ]; then sed -i "/variables/a\      JD_COOKIE: $JD_COOKIE" serverless.yml; fi;
@@ -151,10 +149,9 @@ jobs:
           if [ $JDFACTORY_FORBID_ACCOUNT ]; then sed -i "/variables/a\      JDFACTORY_FORBID_ACCOUNT: $JDFACTORY_FORBID_ACCOUNT" serverless.yml; fi;
           cat serverless.yml
           env
-
       - name: "压缩文件夹"
         run: zip -r myfile.zip ./*
-        
+
       - name: "部署到腾讯云函数"
         run: node tencentscf.js
         env:
@@ -164,6 +161,6 @@ jobs:
           TENCENT_SECRET_KEY: ${{ secrets.TENCENT_SECRET_KEY }}
           TENCENT_REGION: ${{ secrets.SCF_REGION }}
           TENCENT_FUNCTION_NAME: ${{ secrets.TENCENT_FUNCTION_NAME }}
-        
+
       - name: "部署失败通知"
         run: node action.js

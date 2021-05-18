@@ -76,6 +76,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       await showMsg()
     }
   }
+  if ($.isNode() && message && $.ctrTemp) {
+    await notify.sendNotify(`${$.name}`, `${message}`)
+  }
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -93,7 +96,6 @@ async function jdMs() {
     await getTaskList()
   }
   await getUserInfo(false)
-  await showMsg()
 }
 
 function getActInfo() {

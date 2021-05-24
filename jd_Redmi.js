@@ -9,7 +9,7 @@ Redmi 合成小金刚
 #Redmi->合成小金刚
 20 9 21-27 5 * https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_mi.js, tag=Redmi->合成小金刚,  enabled=true
 ================Loon==============
-[Script]
+[Script] 
 cron "20 9 21-27 5 *" script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_mi.js,tag=Redmi->合成小金刚
 ===============Surge=================
 Redmi->合成小金刚 = type=cron,cronexp="20 9 21-27 5 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_mi.js

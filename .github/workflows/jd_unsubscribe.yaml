@@ -5,8 +5,8 @@ name: jd_unsubscribe-取关商品
 
 on:
     workflow_dispatch:
-    schedule:
-        - cron: "0 5 * * *"
+#    schedule:
+#        - cron: "0 5 * * *"
     watch:
         types: [started]
     repository_dispatch:

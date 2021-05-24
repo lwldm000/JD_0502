@@ -10,7 +10,7 @@ on:
     watch:
         types: [started]
     repository_dispatch:
-        types: jd_jump_jump
+        types: jd_jump
 
 jobs:
     build:
@@ -28,7 +28,7 @@ jobs:
                   npm install
             - name: "运行【母婴跳一跳】"
               run: |
-                  node jd_jump_jump.js
+                  node jd_jump.js
               env:
                   JD_COOKIE: ${{ github.event.client_payload.JD_COOKIE || secrets.JD_COOKIE }}
                   JD_DEBUG: ${{ github.event.client_payload.JD_DEBUG || secrets.JD_DEBUG }}
@@ -47,4 +47,4 @@ jobs:
                   QYWX_AM: ${{ github.event.client_payload.QYWX_AM || secrets.QYWX_AM }}
                   PUSH_PLUS_TOKEN: ${{ github.event.client_payload.PUSH_PLUS_TOKEN || secrets.PUSH_PLUS_TOKEN }}
                   PUSH_PLUS_USER: ${{ github.event.client_payload.PUSH_PLUS_USER || secrets.PUSH_PLUS_USER }}
-                  SYNCURL: https://github.com/wuzhi03/MyActions/raw/main/jd_jump_jump.js
+                  SYNCURL: https://github.com/wuzhi03/MyActions/raw/main/jd_jump.js

@@ -1,6 +1,6 @@
 /*
 动物联萌 618活动
-更新时间：2021-05-25 09:23
+更新时间：2021-05-25 10:18
 做任务，收金币
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
@@ -17,7 +17,7 @@ const $ = new Env('动物联萌');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '',secretp = '',shareCodeList = [];
+let cookiesArr = [], cookie = '',secretp = '',shareCodeList = [],showCode = true;
 const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 !(async () => {
   await requireConfig()
@@ -207,6 +207,42 @@ function zoo_myMap(timeout = 0){
             console.log('\n开始小镇任务：'+ data.data.result.shopList[i].name)// + '-' + data.data.result.shopList[i].shopId
             await zoo_getTaskDetail(data.data.result.shopList[i].shopId)
             //}
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve()
+        }
+      })
+    },timeout)
+  })
+}
+//发技能
+function zoo_pk_doPkSkill(skillType, timeout = 0){
+  return new Promise((resolve) => {
+    setTimeout( ()=>{
+      let url = {
+        url : `${JD_API_HOST}zoo_pk_doPkSkill`,
+        headers : {
+          'Origin' : `https://wbbny.m.jd.com`,
+          'Cookie' : cookie,
+          'Connection' : `keep-alive`,
+          'Accept' : `application/json, text/plain, */*`,
+          'Host' : `api.m.jd.com`,
+          'User-Agent' : `jdapp;iPhone;9.2.0;14.1;`,
+          'Accept-Encoding' : `gzip, deflate, br`,
+          'Accept-Language' : `zh-cn`
+        },
+        body : `functionId=zoo_pk_doPkSkill&body={"skillType" : "${skillType}"}&client=wh5&clientVersion=1.0.0`
+      }
+      $.post(url, async (err, resp, data) => {
+        try {
+          //console.log('zoo_pk_doPkSkill:' + data)
+          data = JSON.parse(data);
+          if (data.data.bizCode === 0) {
+            console.log('技能获得：' + data.data.result.skillValue);
+          } else {
+            console.log('技能释放失败：' + data.data.bizMsg);
           }
         } catch (e) {
           $.logErr(e, resp);
@@ -643,6 +679,7 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             //console.log('zoo_getHomeData:' + JSON.stringify(data))
             secretp = data.data.result.homeMainInfo.secretp
             await zoo_collectProduceScore();
+            //await zoo_pk_doPkSkill("2");
             await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_mZneBluwe_DRzs1f90l6Q_p8OVxtoB-JJEErrVU4eHW7e2I')
             //await zoo_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 ) await zoo_raise(1000)
@@ -815,14 +852,28 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
+            //await $.getScript("https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/memo/jd_nianBeastShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
             await $.getScript("sSKNX-MpqKOJsNu9kZ3RDZ7QeWi6sxWz4LPlDi1VHm-13xd6UuFQOvm3i16s7l4@sSKNX-MpqKOJsNu9zJuNANn6S0Sz4Fwb6Nas7ueAqNRPe_y_sN6aShV7gWudRU8@sSKNX-MpqKPS4bK4nJ_bBs9ER3H_6Ibm2fZ4_GPVIsxn69HGJxjx0Ns@sSKNX-MpqKOJsNu_z53fAYA5MwVQu0cX_laWfFm8OoC57q59lM1PkKs7cWRYEMs@sSKNX-MpqKPS4bK8mpjYAduHLD_o5J91VmZXpgOyhPfwrfaYGigAlOM").then((text) => (shareCodeList = text.split('@')))
+
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }
             //await zoo_pk_assistGroup(body);
           } else {
-          data = JSON.parse(data);
-          console.log('您的商圈助力码：' + data.data.result.groupInfo.groupAssistInviteId)
+            //console.log(data);
+            data = JSON.parse(data);
+            if (showCode) {
+              console.log('您的队伍助力码：' + data.data.result.groupInfo.groupAssistInviteId);
+              showCode = false;
+            }
+            if (data.data.result.groupPkInfo.aheadFinish) return ;
+            for (let i in data.data.result.groupInfo.skillList) {
+              if (data.data.result.groupInfo.skillList[i].num > 0) {
+                await zoo_pk_doPkSkill(data.data.result.groupInfo.skillList[i].code);
+                await zoo_pk_getHomeData();
+                break;
+              }
+            }
           }
         } catch (e) {
           $.logErr(e, resp);

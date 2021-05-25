@@ -815,7 +815,7 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
-            await $.getScript("sSKNX-MpqKOJsNu9kZ3RDZ7QeWi6sxWz4LPlDi1VHm-13xd6UuFQOvm3i16s7l4,sSKNX-MpqKOJsNu9zJuNANn6S0Sz4Fwb6Nas7ueAqNRPe_y_sN6aShV7gWudRU8,sSKNX-MpqKPS4bK4nJ_bBs9ER3H_6Ibm2fZ4_GPVIsxn69HGJxjx0Ns,sSKNX-MpqKOJsNu_z53fAYA5MwVQu0cX_laWfFm8OoC57q59lM1PkKs7cWRYEMs,sSKNX-MpqKPS4bK8mpjYAduHLD_o5J91VmZXpgOyhPfwrfaYGigAlOM").then((text) => (shareCodeList = text.split(',')))
+            await $.getScript("sSKNX-MpqKOJsNu9kZ3RDZ7QeWi6sxWz4LPlDi1VHm-13xd6UuFQOvm3i16s7l4@sSKNX-MpqKOJsNu9zJuNANn6S0Sz4Fwb6Nas7ueAqNRPe_y_sN6aShV7gWudRU8@sSKNX-MpqKPS4bK4nJ_bBs9ER3H_6Ibm2fZ4_GPVIsxn69HGJxjx0Ns@sSKNX-MpqKOJsNu_z53fAYA5MwVQu0cX_laWfFm8OoC57q59lM1PkKs7cWRYEMs@sSKNX-MpqKPS4bK8mpjYAduHLD_o5J91VmZXpgOyhPfwrfaYGigAlOM").then((text) => (shareCodeList = text.split('@')))
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }

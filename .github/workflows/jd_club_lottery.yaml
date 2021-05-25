@@ -15,7 +15,7 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        if: github.event.repository.owner.id == 'lwldm000'
+        #if: github.event.repository.owner.id == 'lwldm000'
         steps:
             - name: 拉取代码
               uses: actions/checkout@v2

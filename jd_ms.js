@@ -69,6 +69,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       await jdMs()
     }
   }
+  if ($.isNode() && message) {
+    await notify.sendNotify(`${$.name}`, `${message}`)
+  }
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')

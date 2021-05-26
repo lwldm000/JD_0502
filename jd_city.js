@@ -1,7 +1,7 @@
 /*
 城城领现金
 活动时间：2021-05-25到2021-06-03
-更新时间：2021-05-24 09:55
+更新时间：2021-05-24 014:55
 脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
 =================================Quantumultx=========================
 [task_local]
@@ -36,7 +36,7 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['']
+let inviteCodes = [""];
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -46,7 +46,7 @@ let inviteCodes = ['']
   if (exchangeFlag) {
     console.log(`脚本自动抽奖`)
   } else {
-    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭`)
+    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在6.2日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -71,10 +71,13 @@ let inviteCodes = ['']
       for (let i = 0; i < $.newShareCodes.length; ++i) {
         console.log(`开始助力 【${$.newShareCodes[i]}】`)
         let res = await getInfo($.newShareCodes[i])
-        if (res && res['data']['bizCode'] === 0) {
-          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]['status'] === '3') {
+        if (res && res['data'] && res['data']['bizCode'] === 0) {
+          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
             break
+          }
+          if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
+            console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
           }
         }
         if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
@@ -92,7 +95,8 @@ let inviteCodes = ['']
           }
         }
       } else {
-        if (new Date().getDate() >= 24) {
+        //默认6.2开启抽奖
+        if ((new Date().getMonth()  + 1) === 6 && new Date().getDate() >= 2) {
           const res = await city_lotteryAward();//抽奖
           if (res && res > 0) {
             for (let i = 0; i < new Array(res).fill('').length; i++) {
@@ -106,12 +110,12 @@ let inviteCodes = ['']
     }
   }
 })()
-  .catch((e) => {
-    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-  })
-  .finally(() => {
-    $.done();
-  })
+    .catch((e) => {
+      $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+    })
+    .finally(() => {
+      $.done();
+    })
 
 function taskPostUrl(functionId,body) {
   return {
@@ -138,21 +142,28 @@ function getInfo(inviteId, flag = false) {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
-            if (inviteId) $.log(`助力结果:\n${data}\n`)
+            // if (inviteId) $.log(`\n助力结果:\n${data}\n`)
             data = JSON.parse(data);
-            if (data.data && !data.data.result.userActBaseInfo.inviteId) {
-              console.log(`账号已黑，看不到邀请码`);
-            } else {
-              if (flag) console.log(`\n\n\n好友助力码：${data.data && data.data.result.userActBaseInfo.inviteId}\n\n\n`)
-            }
-            if (data.data && data['data']['bizCode'] === 0) {
-              for(let vo of data.data.result && data.data.result.mainInfos || []){
-                if (vo.remaingAssistNum === 0 && vo.status === "1") {
-                  console.log(vo.roundNum)
-                  await receiveCash(vo.roundNum)
-                  await $.wait(2*1000)
+            if (data.code === 0) {
+              if (data.data && data['data']['bizCode'] === 0) {
+                if (flag) console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data && data.data.result.userActBaseInfo.inviteId}\n`);
+                for(let vo of data.data.result && data.data.result.mainInfos || []){
+                  if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
+                    console.log(vo.roundNum)
+                    await receiveCash(vo.roundNum)
+                    await $.wait(2*1000)
+                  }
+                }
+              } else {
+                console.log(`\n\n${inviteId ? '助力好友' : '获取邀请码'}失败:${data.data.bizMsg}`)
+                if (flag) {
+                  if (data.data && !data.data.result.userActBaseInfo.inviteId) {
+                    console.log(`账号已黑，看不到邀请码\n`);
+                  }
                 }
               }
+            } else {
+              console.log(`\n\ncity_getHomeData失败:${JSON.stringify(data)}\n`)
             }
           }
         }
@@ -240,7 +251,9 @@ function city_lotteryAward() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `http://jd.turinglabs.net/api/v2/jd/city/read/10/`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://gitee.com/linshi333/linshi/raw/master/city.json`,headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      },'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -300,6 +313,7 @@ function requireConfig() {
 'RtGKzeSiSQOjfNeYQtRh0pAyialyaX22-nlqi_MLbvIen8_shg@RtGKooTAB1vVH_XMTJJAmnKYTheDWAsHUf3POFBbUOmZGr_t@RtGKzbmkFQ6md4uSEoFm0BlriS4wmIcT53-_gTlTePUpYxILyg@RtGKz7qiRw-kK4bLRd1g0-XnpRXbbBOLkwg7i_FfxHdq87RXWA@HYDjzO-nQA-kd4v1V5h_mmGDSuwwa1Hn0u7Kmb_h-5w5lw@X928lbX6AFOjfs_WW9R_milnoSfNuyZTAZ56P4-Gag@W9GMm6vYN1byFPvMTZx_ms_OJVBAOdXzRbDsCwHRD59zF10@RtGKlL3jBW7SHfbBVq91mvH5Teg2XVPkjkbJKd3_qGEDz7Aw@RtGKz7itEw31KNedRNZgg-gN72rBZ4yt6DJ7bVVjzrddkyMMMQ@Rsymm7P7HQund-zHW5h_1uJCcZc6gCA4CiS_mY0435JM@RtGKzOihQVmkLYGZEoFi3-3_-qoBpjScorZkZatRz37O7-XWlQ@RtGKlpP2E1_-KuHpRZBKmrdhH31ugBTA7UM8z0kJYcIFs0jN@yiNZHGEBmKs4Ms_WF5h_mn3uPc-k9pz7m006RvrR@RtGKz-ynFwOhdouSEoJgg0mx6quM_RWX_8e4k1HUw4oAWGggbA',
 'RtGKzeSiSQOjfNeYQtRh0pAyialyaX22-nlqi_MLbvIen8_shg@RtGKooTAB1vVH_XMTJJAmnKYTheDWAsHUf3POFBbUOmZGr_t@RtGKzbmkFQ6md4uSEoFm0BlriS4wmIcT53-_gTlTePUpYxILyg@RtGKz7qiRw-kK4bLRd1g0-XnpRXbbBOLkwg7i_FfxHdq87RXWA@HYDjzO-nQA-kd4v1V5h_mmGDSuwwa1Hn0u7Kmb_h-5w5lw@X928lbX6AFOjfs_WW9R_milnoSfNuyZTAZ56P4-Gag@W9GMm6vYN1byFPvMTZx_ms_OJVBAOdXzRbDsCwHRD59zF10@RtGKlL3jBW7SHfbBVq91mvH5Teg2XVPkjkbJKd3_qGEDz7Aw@RtGKz7itEw31KNedRNZgg-gN72rBZ4yt6DJ7bVVjzrddkyMMMQ@Rsymm7P7HQund-zHW5h_1uJCcZc6gCA4CiS_mY0435JM@RtGKzOihQVmkLYGZEoFi3-3_-qoBpjScorZkZatRz37O7-XWlQ@RtGKlpP2E1_-KuHpRZBKmrdhH31ugBTA7UM8z0kJYcIFs0jN@yiNZHGEBmKs4Ms_WF5h_mn3uPc-k9pz7m006RvrR@RtGKz-ynFwOhdouSEoJgg0mx6quM_RWX_8e4k1HUw4oAWGggbA',
 'RtGKzeSiSQOjfNeYQtRh0pAyialyaX22-nlqi_MLbvIen8_shg@RtGKooTAB1vVH_XMTJJAmnKYTheDWAsHUf3POFBbUOmZGr_t@RtGKzbmkFQ6md4uSEoFm0BlriS4wmIcT53-_gTlTePUpYxILyg@RtGKz7qiRw-kK4bLRd1g0-XnpRXbbBOLkwg7i_FfxHdq87RXWA@HYDjzO-nQA-kd4v1V5h_mmGDSuwwa1Hn0u7Kmb_h-5w5lw@X928lbX6AFOjfs_WW9R_milnoSfNuyZTAZ56P4-Gag@W9GMm6vYN1byFPvMTZx_ms_OJVBAOdXzRbDsCwHRD59zF10@RtGKlL3jBW7SHfbBVq91mvH5Teg2XVPkjkbJKd3_qGEDz7Aw@RtGKz7itEw31KNedRNZgg-gN72rBZ4yt6DJ7bVVjzrddkyMMMQ@Rsymm7P7HQund-zHW5h_1uJCcZc6gCA4CiS_mY0435JM@RtGKzOihQVmkLYGZEoFi3-3_-qoBpjScorZkZatRz37O7-XWlQ@RtGKlpP2E1_-KuHpRZBKmrdhH31ugBTA7UM8z0kJYcIFs0jN@yiNZHGEBmKs4Ms_WF5h_mn3uPc-k9pz7m006RvrR@RtGKz-ynFwOhdouSEoJgg0mx6quM_RWX_8e4k1HUw4oAWGggbA'
+
 
     ];
     if ($.isNode()) {

@@ -1,6 +1,6 @@
 /*
 动物联萌 618活动
-更新时间：2021-05-25 10:18
+更新时间：2021-05-26 09:46
 做任务，收金币
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 // quantumultx
@@ -15,9 +15,9 @@ cron "5 * * * *" script-path=https://raw.githubusercontent.com/yangtingxiao/Quan
 */
 const $ = new Env('动物联萌');
 //Node.js用户请在jdCookie.js处填写京东ck;
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '',secretp = '',shareCodeList = [],showCode = true;
+let doPkSkill = true;  //自动放技能，不需要的改为false
 const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
 !(async () => {
   await requireConfig()
@@ -684,7 +684,7 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             //await zoo_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 ) await zoo_raise(1000)
             await zoo_getHomeData('ZXTKT0225KkcRx4b8lbWJU72wvZZcwFjRWn6-7zx55awQ');
-            //await zoo_getTaskDetail("","app")
+            await zoo_getTaskDetail("","app")
             await zoo_getTaskDetail()
           } else {
             return
@@ -852,9 +852,7 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
-            await $.getScript("https://raw.githubusercontent.com/lwldm000/JD_0502/bf1f1e26cd17036445203c317863a8f38c9ccae9/jd_nianBeastShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
-            //await $.getScript("sSKNX-MpqKOJsNu9kZ3RDZ7QeWi6sxWz4LPlDi1VHm-13xd6UuFQOvm3i16s7l4@sSKNX-MpqKOJsNu9zJuNANn6S0Sz4Fwb6Nas7ueAqNRPe_y_sN6aShV7gWudRU8@sSKNX-MpqKPS4bK4nJ_bBs9ER3H_6Ibm2fZ4_GPVIsxn69HGJxjx0Ns@sSKNX-MpqKOJsNu_z53fAYA5MwVQu0cX_laWfFm8OoC57q59lM1PkKs7cWRYEMs@sSKNX-MpqKPS4bK8mpjYAduHLD_o5J91VmZXpgOyhPfwrfaYGigAlOM").then((text) => (shareCodeList = text.split('@')))
-
+            await $.getScript("https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/memo/jd_nianBeastShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }
@@ -866,7 +864,17 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
               console.log('您的队伍助力码：' + data.data.result.groupInfo.groupAssistInviteId);
               showCode = false;
             }
-            if (data.data.result.groupPkInfo.aheadFinish) return ;
+            //if (data.data.result.groupPkInfo.aheadFinish) return ;
+            if (!doPkSkill) return ;
+            if (typeof data.data.result.groupPkInfo.dayTotalValue !== "undefined") {
+              if (data.data.result.groupPkInfo.dayTotalValue >= data.data.result.groupPkInfo.dayTargetSell) return;
+            }
+            else
+            if (typeof data.data.result.groupPkInfo.nightTotalValue !== "undefined") {
+              if (data.data.result.groupPkInfo.nightTotalValue >= data.data.result.groupPkInfo.nightTargetSell) return;
+            }
+            else
+              return;
             for (let i in data.data.result.groupInfo.skillList) {
               if (data.data.result.groupInfo.skillList[i].num > 0) {
                 await zoo_pk_doPkSkill(data.data.result.groupInfo.skillList[i].code);
@@ -1050,6 +1058,7 @@ function initial() {
     merge[i].notify = "";
     merge[i].show = true;
   }
+  showCode = true;
 }
 //通知
 function msgShow() {

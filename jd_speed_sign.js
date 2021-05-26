@@ -92,9 +92,9 @@ function showMsg() {
     $.msg($.name, '', `京东账号${$.index}${$.UserName}\n${message}`);
 	if ($.isNode()) {
       if ($.total/10000 > 50)
-        notify.sendNotify(`${$.name}金币可兑换`, `京东账号${$.index} ${$.nickName}\n可兑换 ${($.total/10000).toFixed(2)} 元京东红包\n,请及时使用,忌积攒\n兑换入口：京东极速版->我的->>金币`);
+        notify.sendNotify(`${$.name}金币可兑换`, `京东账号${$.index} ${$.nickName}\n可兑换 ${($.total/10000).toFixed(2)} 元京东红包\n,`);
       }
-    //await notify.sendNotify($.name, message);
+    await notify.sendNotify($.name, message);
     resolve()
   })
 }

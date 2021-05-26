@@ -6,7 +6,7 @@ name: jd_speed_sign-极速版签到+赚现金
 on:
     workflow_dispatch:
     schedule:
-        - cron: "0 4,16,23 * * *"
+        - cron: "0 4,11,18 * * *"
     watch:
         types: [started]
     repository_dispatch:

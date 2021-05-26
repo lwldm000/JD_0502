@@ -852,7 +852,7 @@ function zoo_pk_getHomeData(body = "",timeout = 0) {
       $.post(url, async (err, resp, data) => {
         try {
           if (body !== "") {
-            await $.getScript("https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/memo/jd_nianBeastShareCode.txt").then((text) => (shareCodeList = text.split('\n')))
+            await $.getScript("").then((text) => (shareCodeList = text.split('\n')))
             for (let i in shareCodeList) {
               if (shareCodeList[i]) await zoo_pk_assistGroup(shareCodeList[i]);
             }

@@ -216,7 +216,7 @@ async function doTask(taskId) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.code === 0) {
-              console.log(`${data.data.taskInfo.mainTitle}任务完成成功，预计获得${data.data.reward}金币`)
+              console.log(`账号${$.index}：${data.data.taskInfo.mainTitle}任务完成成功，预计获得${data.data.reward}金币`)
             } else {
               console.log(`任务完成失败，${data.message}`)
             }
@@ -273,9 +273,9 @@ async function rewardTask(id, taskId) {
             data = JSON.parse(data);
             if (data.code === 0) {
               $.score += data.data.reward
-              console.log(`气泡收取成功，获得${data.data.reward}金币`)
+              console.log(`账号${$.index}：气泡收取成功，获得${data.data.reward}金币`)
             } else {
-              console.log(`气泡收取失败，${data.message}`)
+              console.log(`账号${$.index}：气泡收取失败，${data.message}`)
             }
           }
         }
@@ -343,16 +343,16 @@ async function startItem(activeId, activeType) {
                 let {videoBrowsing, taskCompletionProgress, taskCompletionLimit} = data.data.taskInfo
                 if (activeType !== 3)
                   videoBrowsing = activeType === 1 ? 5 : 10
-                console.log(`【${taskCompletionProgress + 1}/${taskCompletionLimit}】浏览商品任务记录成功，等待${videoBrowsing}秒`)
+                console.log(`账号${$.index}：【${taskCompletionProgress + 1}/${taskCompletionLimit}】浏览商品任务记录成功，等待${videoBrowsing}秒`)
                 await $.wait(videoBrowsing * 1000)
                 await endItem(data.data.uuid, activeType, activeId, activeType === 3 ? videoBrowsing : "")
               } else {
-                console.log(`${$.taskName}任务已达上限`)
+                console.log(`账号${$.index}：${$.taskName}任务已达上限`)
                 $.canStartNewItem = false
               }
             } else {
               $.canStartNewItem = false
-              console.log(`${$.taskName}任务开启失败，${data.message}`)
+              console.log(`账号${$.index}：${$.taskName}任务开启失败，${data.message}`)
             }
           }
         }
@@ -427,9 +427,9 @@ async function rewardItem(uuid, activeType, activeId = "", videoTimeLength = "")
             data = JSON.parse(data);
             if (data.code === 0 && data.isSuccess) {
               $.score += data.data.reward
-              console.log(`${$.taskName}任务完成，获得${data.data.reward}金币`)
+              console.log(`账号${$.index}：${$.taskName}任务完成，获得${data.data.reward}金币`)
             } else {
-              console.log(`${$.taskName}任务失败，${data.message}`)
+              console.log(`账号${$.index}：${$.taskName}任务失败，${data.message}`)
             }
           }
         }
@@ -480,7 +480,7 @@ function wheelsHome() {
             if (safeGet(data)) {
               data = JSON.parse(data);
               if(data.code ===0){
-                console.log(`【幸运大转盘】剩余抽奖机会：${data.data.lotteryChances}`)
+                console.log(`账号${$.index}：【幸运大转盘】剩余抽奖机会：${data.data.lotteryChances}`)
                 while(data.data.lotteryChances--) {
                   await wheelsLottery()
                   await $.wait(500)
@@ -510,8 +510,8 @@ function wheelsLottery() {
             if (safeGet(data)) {
               data = JSON.parse(data);
               if(data.data && data.data.rewardType){
-                console.log(`幸运大转盘抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue}${data.data.couponDesc}】\n`)
-                message += `幸运大转盘抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue}${data.data.couponDesc}】\n`
+                console.log(`账号${$.index}：幸运大转盘抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue}${data.data.couponDesc}】\n`)
+                message += `账号${$.index}：幸运大转盘抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue}${data.data.couponDesc}】\n`
               }else{
                 console.log(`幸运大转盘抽奖获得：空气`)
               }
@@ -542,7 +542,7 @@ function apTaskList() {
                 for(let task of data.data){
                   // {"linkId":"toxw9c5sy9xllGBr3QFdYg","taskType":"SIGN","taskId":67,"channel":4}
                   if(!task.taskFinished && ['SIGN','BROWSE_CHANNEL'].includes(task.taskType)){
-                    console.log(`去做任务${task.taskTitle}`)
+                    console.log(`账号${$.index}：去做任务${task.taskTitle}`)
                     await apDoTask(task.taskType,task.id,4,task.taskSourceUrl)
                   }
                 }
@@ -567,12 +567,12 @@ function apDoTask(taskType,taskId,channel,itemId) {
         try {
           if (err) {
             console.log(`${JSON.stringify(err)}`)
-            console.log(`${$.name} API请求失败，请检查网路重试`)
+            console.log(`账号${$.index}：${$.name} API请求失败，请检查网路重试`)
           } else {
             if (safeGet(data)) {
               data = JSON.parse(data);
               if(data.code ===0 && data.data && data.data.finished){
-                console.log(`任务完成成功`)
+                console.log(`账号${$.index}：任务完成成功`)
               }else{
                 console.log(JSON.stringify(data))
               }
@@ -598,7 +598,7 @@ function richManIndex() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if(data.code ===0 && data.data && data.data.userInfo){
-              console.log(`用户当前位置：${data.data.userInfo.position}，剩余机会：${data.data.userInfo.randomTimes}`)
+              console.log(`账号${$.index}：用户当前位置：${data.data.userInfo.position}，剩余机会：${data.data.userInfo.randomTimes}`)
               while(data.data.userInfo.randomTimes--){
                 await shootRichManDice()
               }
@@ -625,10 +625,10 @@ function shootRichManDice() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if(data.code ===0 && data.data && data.data.rewardType && data.data.couponDesc){
-              message += `红包大富翁抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue} ${data.data.poolName}】\n`
-              console.log(`红包大富翁抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue} ${data.data.poolName}】`)
+              message += `账号${$.index}：红包大富翁抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue} ${data.data.poolName}】\n`
+              console.log(`账号${$.index}：红包大富翁抽奖获得：【${data.data.couponUsedValue}-${data.data.rewardValue} ${data.data.poolName}】`)
             }else{
-              console.log(`红包大富翁抽奖：获得空气`)
+              console.log(`账号${$.index}：红包大富翁抽奖：获得空气`)
             }
           }
         }

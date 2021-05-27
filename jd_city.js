@@ -26,7 +26,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let exchangeFlag = $.getdata('jdJxdExchange') || !!0;//是否开启自动抽奖，建议活动快结束开启，默认关闭
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-
+let allMessage = '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -45,8 +45,10 @@ let inviteCodes = [""];
   await requireConfig();
   if (exchangeFlag) {
     console.log(`脚本自动抽奖`)
+    message += `脚本已经开启自动抽奖\n`
   } else {
     console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在6.2日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
+    message += `脚本还没有开启自动抽奖，\n建议活动快结束开启，\n默认关闭(在6.2日自动开启抽奖),如需自动抽奖请设置环境变量\n`
   }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
@@ -58,6 +60,7 @@ let inviteCodes = [""];
       message = '';
       await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+      message += `\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`;
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
@@ -74,6 +77,7 @@ let inviteCodes = [""];
         if (res && res['data'] && res['data']['bizCode'] === 0) {
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
+            message += `助力次数已耗尽，无法助力`;
             break
           }
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
@@ -107,7 +111,11 @@ let inviteCodes = [""];
         }
       }
       await $.wait(1000)
+      await showMsg();
     }
+  }
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`)
   }
 })()
   .catch((e) => {
@@ -116,6 +124,14 @@ let inviteCodes = [""];
   .finally(() => {
     $.done();
   })
+
+async function showMsg() {
+  return new Promise(resolve => {
+    if (message) $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
+    allMessage += `${message}\n`;
+    resolve()
+  })
+}
 
 function taskPostUrl(functionId,body) {
   return {
@@ -151,6 +167,7 @@ function getInfo(inviteId, flag = false) {
                   if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
                     console.log(vo.roundNum)
                     await receiveCash(vo.roundNum)
+                    message += '【当前账号金额共计】：${data.data.result.totalCash} 元\n';
                     await $.wait(2*1000)
                   }
                 }
@@ -159,6 +176,7 @@ function getInfo(inviteId, flag = false) {
                 if (flag) {
                   if (data.data && !data.data.result.userActBaseInfo.inviteId) {
                     console.log(`账号已黑，看不到邀请码\n`);
+                    message += `本账号已黑，没有邀请码\n`;
                   }
                 }
               }
@@ -280,7 +298,7 @@ function shareCodesFormat() {
     $.newShareCodes = [];
     if ($.shareCodesArr[$.index - 1]) {
       $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
-    } else {
+    } /*else {
       console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
@@ -288,7 +306,7 @@ function shareCodesFormat() {
     const readShareCodeRes = await readShareCode();
     if (readShareCodeRes && readShareCodeRes.code === 200) {
       $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
+    }*/
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })

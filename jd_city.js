@@ -77,7 +77,11 @@ let inviteCodes = [""];
         if (res && res['data'] && res['data']['bizCode'] === 0) {
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
-            message += `助力次数已耗尽，无法助力\n【当前账号金额共计】：${data.data.result.totalCash} 元\n`;
+            message += `助力次数已耗尽，无法助力\n`;
+            if(res['data']['result']['totalCash'] === !0)
+            {
+              message += `【当前现金金额】${res.data.result.totalCash}元\n`;
+            }
             break
           }
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {

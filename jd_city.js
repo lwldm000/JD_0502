@@ -80,7 +80,8 @@ let inviteCodes = [""];
             message += `助力次数已耗尽，无法助力\n`;
             if(res['data']['result']['totalCash'] === !0)
             {
-              message += `【当前现金金额】${res.data.result.totalCash}元\n`;
+              let ttcash = res['data']['result']['totalCash'];
+              message += `【当前现金金额】${ttcash}元\n`;
             }
             break
           }

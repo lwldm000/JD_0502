@@ -26,7 +26,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let helpAuthor = false;
+let allMessage = "";
 const randomCount = $.isNode() ? 20 : 5;
 let t = +new Date()
 let cash_exchange = true;//是否消耗2元红包兑换200京豆，默认否
@@ -73,9 +73,8 @@ let allMessage = '';
       await jdCash()
     }
   }
-  if (allMessage) {
-    if ($.isNode() && (process.env.CASH_NOTIFY_CONTROL ? process.env.CASH_NOTIFY_CONTROL === 'false' : !!1)) await notify.sendNotify($.name, allMessage);
-    $.msg($.name, '', allMessage);
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`)
   }
 })()
     .catch((e) => {
@@ -107,7 +106,7 @@ async function jdCash() {
       }
     }
     if ($.exchangeBeanNum) {
-      message += `兑换京豆成功，获得${$.exchangeBeanNum * 100}京豆\n`;
+      allMessage += `兑换京豆成功，获得${$.exchangeBeanNum * 100}京豆\n`;
     }
   }
   await index(true)
@@ -132,8 +131,8 @@ function index(info=false) {
                 console.log(`\n\n当前现金：${data.data.result.signMoney}元`);
                 return
               }
-              // console.log(`您的助力码为${data.data.result.inviteCode}`)
-              //console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data.result.inviteCode}\n`);
+              console.log(`您的助力码为${data.data.result.inviteCode}`)
+              allMessage += `\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data.result.inviteCode}\n`;
               let helpInfo = {
                 'inviteCode': data.data.result.inviteCode,
                 'shareDate': data.data.result.shareDate

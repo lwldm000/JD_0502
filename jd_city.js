@@ -128,7 +128,7 @@ let inviteCodes = [""];
 async function showMsg() {
   return new Promise(resolve => {
     if (message) $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
-    allMessage += `${message}\n`;
+    allMessage += `${message}\n【当前账号金额共计】：${data.data.result.totalCash} 元\n`;
     resolve()
   })
 }
@@ -167,7 +167,7 @@ function getInfo(inviteId, flag = false) {
                   if (vo && vo.remaingAssistNum === 0 && vo.status === "1") {
                     console.log(vo.roundNum)
                     await receiveCash(vo.roundNum)
-                    message += '【当前账号金额共计】：${data.data.result.totalCash} 元\n';
+                    message += `【当前账号金额共计】：${data.data.result.totalCash} 元\n`;
                     await $.wait(2*1000)
                   }
                 }

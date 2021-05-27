@@ -128,7 +128,7 @@ let inviteCodes = [""];
 async function showMsg() {
   return new Promise(resolve => {
     if (message) $.msg($.name, '', `【京东账号${$.index}】${$.nickName}\n${message}`);
-    allMessage += `${message}\n【当前账号金额共计】：${data.data.result.totalCash} 元\n`;
+    allMessage += `${message}\n`;
     resolve()
   })
 }

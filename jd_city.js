@@ -78,13 +78,7 @@ let inviteCodes = [""];
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
             console.log(`助力次数已耗尽，跳出`)
             message += `助力次数已耗尽，无法助力\n`;
-            let ttcash = res['data']['result']['totalCash'];
-            console.log(`测试金额${ttcash}`)
-            if(res['data']['result']['totalCash'] === !0)
-            {
-              
-              message += `【当前现金金额】${ttcash}元\n`;
-            }
+
             break
           }
           if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {

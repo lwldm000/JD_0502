@@ -91,7 +91,7 @@ function showMsg() {
   return new Promise(resolve => {
     message += `本次运行获得${$.score}金币，共计${$.total}金币`
     $.msg($.name, '', `京东账号${$.index}${$.UserName}\n${message}`);
-    allMessage += `京东账号${$.index}${$.UserName}\n${message}`;
+    allMessage += `京东账号${$.index}${$.UserName}\n${message}\n可兑换 ${($.total/10000).toFixed(2)} 元京东红包\n,`;
     /*if ($.isNode()) {
       if ($.total/10000 > 3)
         notify.sendNotify(`${$.name}金币可兑换`, `京东账号${$.index} ${$.nickName}\n可兑换 ${($.total/10000).toFixed(2)} 元京东红包\n,`);

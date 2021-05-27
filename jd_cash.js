@@ -132,7 +132,7 @@ function index(info=false) {
                 return
               }
               console.log(`您的助力码为${data.data.result.inviteCode}`)
-              allMessage += `\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${data.data.result.inviteCode}\n`;
+              allMessage += `\n【京东账号${$.index}（${$.UserName}）】\n当前现金：${data.data.result.signMoney}元$\n{$.name}好友互助码\n${data.data.result.inviteCode}\n`;
               let helpInfo = {
                 'inviteCode': data.data.result.inviteCode,
                 'shareDate': data.data.result.shareDate

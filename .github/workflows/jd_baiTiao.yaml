@@ -6,7 +6,7 @@ name: jd_baiTiao-京东白条
 on:
     workflow_dispatch:
     schedule:
-        - cron: '0 23 * * *'
+        - cron: '0 1 * * *'
     watch:
         types: [started]
     repository_dispatch:

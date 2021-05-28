@@ -5,8 +5,8 @@ name: jd_zoo-动物联萌
 
 on:
     workflow_dispatch:
-    schedule:
-        - cron: "27 2/5 * * *"
+    #schedule:
+        #- cron: "27 2/5 * * *"
     watch:
         types: [started]
     repository_dispatch:

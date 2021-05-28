@@ -49,8 +49,8 @@ let allMessage = '';
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  //await requireConfig()
-  //await getAuthorShareCode();
+  await requireConfig()
+  await getAuthorShareCode();
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -85,8 +85,8 @@ let allMessage = '';
     })
 async function jdCash() {
   await index()
-  //await shareCodesFormat()
-  //await helpFriends()
+  await shareCodesFormat()
+  await helpFriends()
   await getReward()
   await getReward('2');
   $.exchangeBeanNum = 0;
@@ -131,7 +131,7 @@ function index(info=false) {
                 console.log(`\n\n当前现金：${data.data.result.signMoney}元`);
                 return
               }
-              console.log(`您的助力码为${data.data.result.inviteCode}`)
+              console.log(`您的助力码为${data.data.result.inviteCode}，助力日期为${data.data.result.shareDate}`)
               allMessage += `\n【京东账号${$.index}（${$.UserName}）】\n当前现金：${data.data.result.signMoney}元\n${$.name}好友互助码\n${data.data.result.inviteCode}\n`;
               let helpInfo = {
                 'inviteCode': data.data.result.inviteCode,
@@ -345,7 +345,7 @@ function showMsg() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: "https://cdn.jsdelivr.net/gh/wuzhi-docker1/RandomShareCode@main/JD_Cash.json",headers:{
+    $.get({url: "https://raw.githubusercontent.com/lwldm000/JD_0502/main/JD_Cash.json",headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       }}, async (err, resp, data) => {
       try {
@@ -396,6 +396,21 @@ function requireConfig() {
   return new Promise(resolve => {
     console.log(`开始获取${$.name}配置文件\n`);
     let shareCodes = [
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
+      'eU9YaeS0bvUm8zrXnnNB0g@eU9YabmyMvgj-GbdziZG0A@eU9Ya7q0YPkhpGuEmXpA0w@Ih4xaO-xZ_kh-Ga6iw@YENuMbXsJ6Um8Q@ZE9eP6vOEKB3mxaDkTs@eU9YML31IphXkhuOighV@eU9Ya7i7NPtwpzrSmHFAgw@eVJ0P7PtOv0i-AGI@eU9YaOi3Zq8homzWziZC3w@eU9YMpPgNKl7pQymmTdq@eU9YBoTWIK1QkBiDkDVg@9b2LuGEXv129@eU9Ya-yxMPUk-WbdziVAgw',
 
     ];
     if ($.isNode()) {
@@ -453,7 +468,7 @@ function taskUrl(functionId, body = {}) {
   }
 }
 
-function getAuthorShareCode(url = "https://cdn.jsdelivr.net/gh/wuzhi-docker1/updateTeam@master/shareCodes/jd_updateCash.json") {
+function getAuthorShareCode(url = "https://raw.githubusercontent.com/lwldm000/JD_0502/main/jd_updateCash.json") {
   return new Promise(resolve => {
     $.get({url, headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"

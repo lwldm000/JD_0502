@@ -38,9 +38,9 @@ const JD_API_HOST = `https://api.m.jd.com/client.action?functionId=`;
         continue;
       }
       console.log('\n\n京东账号：'+merge.nickname + ' 任务开始')
-      await zoo_sign()
+      //await zoo_sign()
       await zoo_pk_getHomeData();
-      await zoo_getHomeData();
+      //await zoo_getHomeData();
       //await qryCompositeMaterials()
       await msgShow();
       //break;
@@ -712,10 +712,10 @@ function zoo_getHomeData(inviteId= "",timeout = 0) {
             secretp = data.data.result.homeMainInfo.secretp
             await zoo_collectProduceScore();
             //await zoo_pk_doPkSkill("2");
-            await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_mZneBluwe_DRzs1f90l6Q_p8OVxtoB-JJEErrVU4eHW7e2I')
+            //await zoo_pk_getHomeData('sSKNX-MpqKOJsNu_mZneBluwe_DRzs1f90l6Q_p8OVxtoB-JJEErrVU4eHW7e2I')
             //await zoo_pk_assistGroup()
             if (data.data.result.homeMainInfo.raiseInfo.buttonStatus === 1 ) await zoo_raise(1000)
-            await zoo_getHomeData('ZXTKT0225KkcRx4b8lbWJU72wvZZcwFjRWn6-7zx55awQ');
+            //await zoo_getHomeData('ZXTKT0225KkcRx4b8lbWJU72wvZZcwFjRWn6-7zx55awQ');
             await zoo_getTaskDetail("","app")
             await zoo_getTaskDetail()
           } else {

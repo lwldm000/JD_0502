@@ -101,7 +101,7 @@ message = ""
             }
         }
 if ($.isNode() ){ 
- await notify.sendNotify("翻翻乐提现", `${message}\n`);
+ await notify.sendNotify("翻翻乐提现", `${message}`);
 }
 
     })()

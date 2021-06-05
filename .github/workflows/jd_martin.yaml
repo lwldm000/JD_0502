@@ -5,8 +5,8 @@ name: jd_martin-人头马x博朗
 
 on:
     workflow_dispatch:
-    schedule:
-        - cron: "11 9,19 * * *"
+  #  schedule:
+   #     - cron: "11 9,19 * * *"
     watch:
         types: [started]
     repository_dispatch:

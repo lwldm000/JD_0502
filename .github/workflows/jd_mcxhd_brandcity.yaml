@@ -5,8 +5,8 @@ name: jd_mcxhd_brandcity-新潮品牌狂欢
 
 on:
     workflow_dispatch:
-    schedule:
-        - cron: "0 0-23/1 * * *"
+   # schedule:
+    #    - cron: "0 0-23/1 * * *"
     watch:
         types: [started]
     repository_dispatch:

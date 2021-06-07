@@ -312,7 +312,7 @@ function reportGame(score) {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.retCode === '200') {
-              const earn = data?.result?.gift?.jbeanNum ?? 0
+              const earn = 0
               $.earn += earn
               console.log(`游戏结束成功，获得 ${earn} 京豆`)
             } else {
